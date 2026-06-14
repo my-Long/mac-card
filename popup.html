@@ -1,0 +1,84 @@
+<!--
+ * @Date: 2026-06-14 21:32:03
+ * @Author: monet.Lo
+ * @LastEditors: monet.Lo
+ * @LastEditTime: 2026-06-14 21:59:51
+ * @FilePath: /picborder/popup.html
+ * @description: 
+-->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PicBorder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Left: upload / preview -->
+    <main id="left-panel">
+      <div id="drop-zone">
+        <input type="file" id="file-input" accept="image/*">
+        <div id="drop-hint">
+          <div class="upload-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="48" height="48" rx="10" fill="#f2f2f7"/>
+              <path d="M32 42V26M32 26L24 34M32 26L40 34" stroke="#c7c7cc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="hint-title">拖拽图片到此处</p>
+          <p class="hint-sub">或 <button id="browse-btn" type="button">点击选择文件</button></p>
+          <p class="hint-meta">PNG · JPG · WebP · GIF &nbsp;·&nbsp; 也支持 Cmd+V 粘贴</p>
+        </div>
+        <canvas id="preview-canvas"></canvas>
+      </div>
+    </main>
+
+    <!-- Right: controls (400px) -->
+    <aside id="right-panel">
+      <header class="panel-header">
+        <div class="traffic-lights">
+          <span class="tl red"></span>
+          <span class="tl yellow"></span>
+          <span class="tl green"></span>
+        </div>
+        <span class="app-name">PicBorder</span>
+      </header>
+
+      <div class="panel-body">
+
+        <section class="ctrl-section">
+          <h3 class="ctrl-label">Style</h3>
+          <div class="segmented" role="group" aria-label="风格选择">
+            <button class="seg active" data-theme="light" type="button">Light Bar</button>
+            <button class="seg" data-theme="dark" type="button">Dark Bar</button>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="ctrl-section">
+          <h3 class="ctrl-label">
+            Radius Size
+            <span class="ctrl-value"><output id="radius-out">12</output>&thinsp;px</span>
+          </h3>
+          <input type="range" id="radius-slider" min="0" max="40" value="12">
+          <div class="range-labels">
+            <span>Sharp</span>
+            <span>Round</span>
+          </div>
+        </section>
+
+      </div>
+
+      <footer class="panel-footer">
+        <button id="download-btn" disabled type="button">Download Image</button>
+      </footer>
+    </aside>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

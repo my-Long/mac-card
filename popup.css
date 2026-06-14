@@ -1,0 +1,337 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --accent:        #007aff;
+  --accent-press:  #0062cc;
+  --bg:            #f2f2f7;
+  --surface:       #ffffff;
+  --border:        #e5e5ea;
+  --border-strong: #c6c6c8;
+  --text-1:        #1c1c1e;
+  --text-2:        #636366;
+  --text-3:        #aeaeb2;
+  --tl-red:        #ff5f57;
+  --tl-yellow:     #ffbd2e;
+  --tl-green:      #28c840;
+  --seg-bg:        #e9e9ee;
+}
+
+html, body {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+               'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ── Left panel ─────────────────────────────── */
+
+#left-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  padding: 32px;
+  background: var(--bg);
+}
+
+#drop-zone {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border-strong);
+  border-radius: 20px;
+  background: var(--surface);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+
+#drop-zone.drag-over {
+  border-color: var(--accent);
+  border-style: solid;
+  background: #eaf2ff;
+}
+
+/* The real file input — invisible, fills entire drop zone */
+#file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  font-size: 0; /* hides the "no file chosen" text on some browsers */
+}
+
+#drop-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  user-select: none;
+  text-align: center;
+}
+
+.upload-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
+}
+
+.upload-icon svg { width: 100%; height: 100%; }
+
+.hint-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.hint-sub {
+  font-size: 14px;
+  color: var(--text-3);
+  pointer-events: all;
+}
+
+#browse-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 0;
+}
+
+#browse-btn:hover { text-decoration: underline; }
+
+.hint-meta {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+#preview-canvas {
+  display: none;
+  /* explicit px size set by JS; canvas renders at full res */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* ── Right panel ─────────────────────────────── */
+
+#right-panel {
+  width: 400px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px 17px;
+  border-bottom: 1px solid var(--border);
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.tl {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.tl.red    { background: var(--tl-red); }
+.tl.yellow { background: var(--tl-yellow); }
+.tl.green  { background: var(--tl-green); }
+
+.app-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: -0.2px;
+}
+
+/* Body */
+.panel-body {
+  flex: 1;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.ctrl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 0;
+}
+
+.ctrl-section:first-child { padding-top: 4px; }
+
+.ctrl-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.ctrl-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 -24px; /* bleed to panel edges */
+  flex-shrink: 0;
+}
+
+/* Segmented control — macOS style */
+.segmented {
+  display: flex;
+  background: var(--seg-bg);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.seg {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.seg:hover:not(.active) {
+  background: rgba(0,0,0,0.04);
+  color: var(--text-1);
+}
+
+.seg.active {
+  background: var(--surface);
+  color: var(--text-1);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* Range slider */
+#radius-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  /* --pct set via JS for filled track */
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--pct, 30%),
+    #e5e5ea        var(--pct, 30%)
+  );
+}
+
+#radius-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2), 0 0 0 0.5px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.12s;
+}
+
+#radius-slider::-webkit-slider-thumb:active {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 0 0 4px rgba(0,122,255,0.15);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: -2px;
+}
+
+/* Footer */
+.panel-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+}
+
+#download-btn {
+  width: 100%;
+  padding: 13px 24px;
+  border: none;
+  border-radius: 980px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  transition: background 0.15s, transform 0.1s;
+}
+
+#download-btn:hover:not(:disabled) {
+  background: #0077ed;
+}
+
+#download-btn:active:not(:disabled) {
+  background: var(--accent-press);
+  transform: scale(0.99);
+}
+
+#download-btn:disabled {
+  background: var(--seg-bg);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
