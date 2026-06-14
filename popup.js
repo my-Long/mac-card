@@ -1,6 +1,6 @@
 'use strict';
 
-const state = { theme: 'light', radius: 12 };
+const state = { theme: 'light', radius: 12, border: true };
 
 let currentImg      = null;
 let currentFileName = 'picborder';
@@ -12,6 +12,7 @@ const dropHint      = document.getElementById('drop-hint');
 const previewCanvas = document.getElementById('preview-canvas');
 const radiusSlider  = document.getElementById('radius-slider');
 const radiusOut     = document.getElementById('radius-out');
+const borderToggle  = document.getElementById('border-toggle');
 const downloadBtn   = document.getElementById('download-btn');
 const segBtns       = document.querySelectorAll('.seg');
 
@@ -95,6 +96,11 @@ function syncSliderFill(slider) {
 
 syncSliderFill(radiusSlider);
 
+borderToggle.addEventListener('change', () => {
+  state.border = borderToggle.checked;
+  if (currentImg) render();
+});
+
 // ── Download ──────────────────────────────────
 
 downloadBtn.addEventListener('click', () => {
@@ -113,7 +119,7 @@ downloadBtn.addEventListener('click', () => {
 
 // ── Canvas rendering ──────────────────────────
 
-const TITLEBAR_H = 38; // fixed, never scales
+const TITLEBAR_H = 40; // fixed, never scales
 
 /**
  * imgW / imgH  — target pixel dimensions for the image content area
@@ -123,7 +129,7 @@ const TITLEBAR_H = 38; // fixed, never scales
  * All CSS coordinates (titlebar 38px, dot positions) stay constant regardless
  * of imgW/imgH — only the image content changes size.
  */
-function drawMacWindow(canvas, img, theme, radius, imgW, imgH, dpr) {
+function drawMacWindow(canvas, img, theme, radius, imgW, imgH, dpr, showBorder) {
   const isLight = theme === 'light';
 
   // Canvas physical size = CSS logical size × dpr
@@ -189,6 +195,17 @@ function drawMacWindow(canvas, img, theme, radius, imgW, imgH, dpr) {
   ctx.drawImage(img, 0, TITLEBAR_H, imgW, imgH);
   ctx.restore();
 
+  // Outer border — drawn last so nothing paints over it
+  if (showBorder) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(0.5, 0.5, imgW - 1, winH - 1, Math.max(0, radius - 0.5));
+    ctx.strokeStyle = isLight ? '#E3E3E3' : '#737572';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+  }
+
   ctx.restore(); // undo scale(dpr, dpr)
 }
 
@@ -211,7 +228,7 @@ function render() {
   const pvW = Math.round(currentImg.width  * imgScale);
   const pvH = Math.round(currentImg.height * imgScale);
 
-  drawMacWindow(previewCanvas, currentImg, state.theme, state.radius, pvW, pvH, dpr);
+  drawMacWindow(previewCanvas, currentImg, state.theme, state.radius, pvW, pvH, dpr, state.border);
   previewCanvas.style.width  = pvW + 'px';
   previewCanvas.style.height = (pvH + TITLEBAR_H) + 'px';
   // Download uses previewCanvas directly — what you see is what you get.
