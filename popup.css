@@ -5,8 +5,9 @@
 }
 
 :root {
-  --accent:        #007aff;
-  --accent-press:  #0062cc;
+  --thumb-bg:      #ffffff;
+  --accent:        #F74F9D;
+  --accent-press:  #ff2088;
   --bg:            #f2f2f7;
   --surface:       #ffffff;
   --border:        #e5e5ea;
@@ -18,6 +19,20 @@
   --tl-yellow:     #ffbd2e;
   --tl-green:      #28c840;
   --seg-bg:        #e9e9ee;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --thumb-bg:      #c8c8c8;
+    --bg:            #282828;
+    --surface:       #323232;
+    --border:        #404040;
+    --border-strong: #525252;
+    --text-1:        #f2f2f2;
+    --text-2:        #a1a1a6;
+    --text-3:        #6c6c70;
+    --seg-bg:        #3d3d3d;
+  }
 }
 
 html, body {
@@ -67,6 +82,10 @@ body {
   border-color: var(--accent);
   border-style: solid;
   background: #eaf2ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  #drop-zone.drag-over { background: #1a2a3a; }
 }
 
 /* The real file input — invisible, fills entire drop zone */
@@ -179,6 +198,7 @@ body {
   letter-spacing: -0.2px;
 }
 
+
 /* Body */
 .panel-body {
   flex: 1;
@@ -273,7 +293,7 @@ body {
   background: linear-gradient(
     to right,
     var(--accent) var(--pct, 30%),
-    #e5e5ea        var(--pct, 30%)
+    var(--border)  var(--pct, 30%)
   );
 }
 
@@ -282,8 +302,8 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--surface);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2), 0 0 0 0.5px rgba(0,0,0,0.08);
+  background: var(--thumb-bg);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: box-shadow 0.12s;
 }
@@ -363,7 +383,7 @@ body {
 }
 
 #download-btn:hover:not(:disabled) {
-  background: #0077ed;
+  background: var(--accent);
 }
 
 #download-btn:active:not(:disabled) {
