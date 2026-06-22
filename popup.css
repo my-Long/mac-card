@@ -365,21 +365,50 @@ body {
 .panel-footer {
   padding: 20px 24px;
   border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
 }
 
+#copy-btn,
 #download-btn {
-  width: 100%;
-  padding: 13px 24px;
+  flex: 1;
+  padding: 13px 16px;
   border: none;
   border-radius: 980px;
-  background: var(--accent);
-  color: #fff;
   font-size: 15px;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   letter-spacing: -0.2px;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s, transform 0.1s, color 0.15s;
+}
+
+#copy-btn {
+  background: var(--seg-bg);
+  color: var(--text-1);
+}
+
+#copy-btn:hover:not(:disabled) {
+  background: var(--border-strong);
+}
+
+#copy-btn:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+#copy-btn:disabled {
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+#copy-btn.copied {
+  background: #34c759;
+  color: #fff;
+}
+
+#download-btn {
+  background: var(--accent);
+  color: #fff;
 }
 
 #download-btn:hover:not(:disabled) {

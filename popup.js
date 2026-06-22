@@ -13,6 +13,7 @@ const previewCanvas = document.getElementById('preview-canvas');
 const radiusSlider  = document.getElementById('radius-slider');
 const radiusOut     = document.getElementById('radius-out');
 const borderToggle  = document.getElementById('border-toggle');
+const copyBtn       = document.getElementById('copy-btn');
 const downloadBtn   = document.getElementById('download-btn');
 const segBtns       = document.querySelectorAll('.seg');
 
@@ -29,6 +30,7 @@ function loadImage(file) {
       currentImg = img;
       dropHint.style.display = 'none';
       previewCanvas.style.display = 'block';
+      copyBtn.disabled     = false;
       downloadBtn.disabled = false;
       render();
     };
@@ -99,6 +101,25 @@ syncSliderFill(radiusSlider);
 borderToggle.addEventListener('change', () => {
   state.border = borderToggle.checked;
   if (currentImg) render();
+});
+
+// ── Copy ──────────────────────────────────────
+
+copyBtn.addEventListener('click', () => {
+  previewCanvas.toBlob(async (blob) => {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      copyBtn.textContent = 'Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Image';
+        copyBtn.classList.remove('copied');
+      }, 1800);
+    } catch {
+      copyBtn.textContent = 'Failed';
+      setTimeout(() => { copyBtn.textContent = 'Copy Image'; }, 1800);
+    }
+  }, 'image/png');
 });
 
 // ── Download ──────────────────────────────────
